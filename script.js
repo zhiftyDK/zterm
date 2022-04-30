@@ -38,6 +38,67 @@ function loadTerminal() {
 }
 window.onload = loadTerminal;
 
+//Get ipAddress
+let publicIpAddress;
+let localIpAddress;
+fetch("https://api.ipify.org/?format=json")
+.then(response => response.json())
+.then(data => {
+    publicIpAddress = data.ip;
+});
+
+var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;  
+if (RTCPeerConnection)(function() {  
+    var rtc = new RTCPeerConnection({  
+        iceServers: []
+    });  
+    if (1 || window.mozRTCPeerConnection) {  
+        rtc.createDataChannel('', {  
+            reliable: false  
+        });  
+    };  
+    rtc.onicecandidate = function(evt) {  
+        if (evt.candidate) grepSDP("a=" + evt.candidate.candidate);  
+    };  
+    rtc.createOffer(function(offerDesc) {  
+        grepSDP(offerDesc.sdp);  
+        rtc.setLocalDescription(offerDesc);  
+    }, function(e) {  
+        console.warn("offer failed", e);  
+    });  
+    var addrs = Object.create(null);  
+    addrs["0.0.0.0"] = false;  
+
+    function updateDisplay(newAddr) {  
+        if (newAddr in addrs) return;  
+        else addrs[newAddr] = true;  
+        var displayAddrs = Object.keys(addrs).filter(function(k) {  
+            return addrs[k];  
+        });  
+        localIpAddress = displayAddrs.join(" or perhaps ") || "n/a";  
+    }  
+
+    function grepSDP(sdp) {  
+        var hosts = [];  
+        sdp.split('\r\n').forEach(function(line) {  
+            if (~line.indexOf("a=candidate")) {  
+                var parts = line.split(' '),  
+                    addr = parts[4],  
+                    type = parts[7];  
+                if (type === 'host') updateDisplay(addr);  
+            } else if (~line.indexOf("c=")) {  
+                var parts = line.split(' '),  
+                    addr = parts[2];  
+                updateDisplay(addr);  
+            }  
+        });  
+    }  
+})();
+else {  
+    document.getElementById('list').innerHTML = "<code>ifconfig| grep inet | grep -v inet6 | cut -d\" \" -f2 | tail -n1</code>";  
+    document.getElementById('list').nextSibling.textContent = "In Chrome and Firefox your IP should display automatically, by the power of WebRTCskull.";  
+}
+
 //Focus Terminal
 setInterval(() => {
     terminalInput.focus();
@@ -113,11 +174,13 @@ terminalInput.addEventListener("keyup", function(event) {
             terminalDatabase.push("");
             terminalDatabase.push("exerunner.clear | Clear list of all exerunner registered executables");
             terminalDatabase.push("");
+            terminalDatabase.push("balance H2O = H + O | Balance chemical equations");
+            terminalDatabase.push("");
             pushCommand();
         }
         else if(terminalInput.value == "version") { //shows version information
             terminalDatabase.push("$ " + terminalInput.value);
-            terminalDatabase.push("You are running Zhifty Terminal version 0.8");
+            terminalDatabase.push("You are running Zhifty Terminal version 0.9");
             terminalDatabase.push("");
             pushCommand();
         } 
@@ -180,10 +243,23 @@ terminalInput.addEventListener("keyup", function(event) {
             const iplookup = terminalInput.value.replace(/lookup /g, "")
             terminalDatabase.push("Looking up " + iplookup + "...");
             terminalDatabase.push("");
-            setTimeout(() => {
-                window.open("https://www.ip-tracker.org/locator/ip-lookup.php?ip=" + iplookup);
-            }, 2000);
-            pushCommand();
+            fetch("http://ip-api.com/json/" + iplookup)
+            .then(response => response.json())
+            .then(data => {
+                terminalDatabase.push("Status: " + data.status);
+                terminalDatabase.push("Isp: " + data.isp);
+                terminalDatabase.push("Org: " + data.org);
+                terminalDatabase.push("City: " + data.city);
+                terminalDatabase.push("Country: " + data.country + `(${data.countryCode})`);
+                terminalDatabase.push("Timezone: " + data.timezone);
+                terminalDatabase.push("Region: " + data.region);
+                terminalDatabase.push("RegionName: " + data.regionName);
+                terminalDatabase.push("Latitude: " + data.lat);
+                terminalDatabase.push("Longitude: " + data.lon);
+                terminalDatabase.push("Zip: " + data.zip);
+                terminalDatabase.push("");
+                pushCommand();
+            });
         }
         else if(terminalInput.value.endsWith("color") || terminalInput.value.startsWith("color") && terminalInput.value.endsWith(" ")){
             terminalDatabase.push("$ " + terminalInput.value);
@@ -204,13 +280,10 @@ terminalInput.addEventListener("keyup", function(event) {
         }
         else if(terminalInput.value.includes("ipconfig")) { //get ip address
             terminalDatabase.push("$ " + terminalInput.value);
-            fetch("https://api.ipify.org/?format=json")
-            .then(response => response.json())
-            .then(data => {
-                terminalDatabase.push("IPv4: " + data.ip);
-                terminalDatabase.push("");
-                pushCommand();
-            });
+            terminalDatabase.push("Public IPv4: " + publicIpAddress);
+            terminalDatabase.push("Local IPv4: " + localIpAddress);
+            terminalDatabase.push("");
+            pushCommand();
         }
         else if(terminalInput.value.includes("matrix")) { //launch the matrix
             terminalDatabase.push("$ " + terminalInput.value);
@@ -364,14 +437,12 @@ terminalInput.addEventListener("keyup", function(event) {
             terminalDatabase.push("");
             pushCommand();
         }
-        else if(terminalInput.value.includes("crypto ")) { //Clear list of all exerunner registered executables
+        else if(terminalInput.value.includes("balance ")) { //Clear list of all exerunner registered executables
             terminalDatabase.push("$ " + terminalInput.value);
-            const cryptoType = terminalInput.value.replace("crypto ", "")
-            terminalDatabase.push("");
-            if(cryptoType == "GKC") {
-                terminalDatabase.push("<img src='https://cdn.discordapp.com/attachments/929297215325884427/929814327299567676/output-onlinegiftools.gif'>")  
-            }
-            terminalDatabase.push("");
+            const equation = terminalInput.value.replace("balance ", "")
+            formulaStr = equation;
+            doBalance();
+            terminalDatabase.push(`<p class="balanceOutputClass">${document.getElementById("balanced").innerHTML}</p>`)
             pushCommand();
         }
         else {
