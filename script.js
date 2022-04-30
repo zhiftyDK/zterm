@@ -195,7 +195,7 @@ terminalInput.addEventListener("keyup", function(event) {
         }
         else if(terminalInput.value.includes("start ")) { //starts any website
             terminalDatabase.push("$ " + terminalInput.value);
-            const startLink = "http://" + terminalInput.value.replace(/start /g, "") 
+            const startLink = "https://" + terminalInput.value.replace(/start /g, "") 
             terminalDatabase.push("You started " + startLink);
             terminalDatabase.push("");
             window.open(startLink, "_blank");
@@ -210,7 +210,7 @@ terminalInput.addEventListener("keyup", function(event) {
         else if(terminalInput.value.includes("ping ")) { //pings any website
             terminalDatabase.push("$ " + terminalInput.value);
             const pingLink = terminalInput.value.replace(/ping /g, "")
-            terminalDatabase.push("Pinging http://" + pingLink + "...");
+            terminalDatabase.push("Pinging https://" + pingLink + "...");
             terminalDatabase.push("");
 
             $.ajaxSetup({ cache: false });
@@ -243,7 +243,7 @@ terminalInput.addEventListener("keyup", function(event) {
             const iplookup = terminalInput.value.replace(/lookup /g, "")
             terminalDatabase.push("Looking up " + iplookup + "...");
             terminalDatabase.push("");
-            fetch("http://ip-api.com/json/" + iplookup)
+            fetch("https://ip-api.com/json/" + iplookup)
             .then(response => response.json())
             .then(data => {
                 terminalDatabase.push("Status: " + data.status);
