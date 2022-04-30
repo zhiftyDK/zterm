@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" href="ztermicon.png" type="image/png" sizes="32x32">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>ZTerm</title>
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        *::-webkit-scrollbar {
+        display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        * {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+        }
+        
+        *{
+            margin: 2px;
+            padding: 2px;
+            background-color: black;
+            color: white;
+            overflow-x: hidden;
+            font-family: 'Fira Code', monospace;
+            font-size: 15px;
+        }
+
+        #terminalPrefix{
+            display: inline;
+            margin-right: 0px;
+        }
+
+        #terminalInput{
+            border-style: none;
+            display: inline;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            margin-left: 0px;
+        }
+
+        #terminalInput:focus{
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal">
+        <p id="terminalText"></p>
+
+        <p id="terminalPrefix">$</p>
+        <input type="text" id="terminalInput" autocomplete="off">
+        <!-- oninput="this.value = this.value.toLowerCase()" -->
+    </div>
+    <div id="ipAddress" style="display: none;"></div>
+
+    <img id="junkOne" style="display: none;"/>
+    <p id="timer" style="display: none;"></p>
+    <embed src="https://xie-emily.com/generative_art/green_rain.html" id="matrix" style="position: absolute; width: 105vw; height: 105vh; overflow: hidden; display: none; margin: 0px; padding: 0px;">
+
+    <script src="./script.js"></script>
+</body>
+</html>
