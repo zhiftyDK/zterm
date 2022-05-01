@@ -243,7 +243,7 @@ terminalInput.addEventListener("keyup", function(event) {
             const iplookup = terminalInput.value.replace(/lookup /g, "")
             terminalDatabase.push("Looking up " + iplookup + "...");
             terminalDatabase.push("");
-            fetch("https://ip-api.com/json/" + iplookup)
+            fetch("http://ip-api.com/json/" + iplookup)
             .then(response => response.json())
             .then(data => {
                 terminalDatabase.push("Status: " + data.status);
