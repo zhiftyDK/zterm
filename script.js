@@ -238,29 +238,29 @@ terminalInput.addEventListener("keyup", function(event) {
             terminalDatabase.push("");
             pushCommand();
         }
-        else if(terminalInput.value.includes("lookup ")) { //get location of ip adress
-            terminalDatabase.push("$ " + terminalInput.value);
-            const iplookup = terminalInput.value.replace(/lookup /g, "")
-            terminalDatabase.push("Looking up " + iplookup + "...");
-            terminalDatabase.push("");
-            fetch("http://ip-api.com/json/" + iplookup)
-            .then(response => response.json())
-            .then(data => {
-                terminalDatabase.push("Status: " + data.status);
-                terminalDatabase.push("Isp: " + data.isp);
-                terminalDatabase.push("Org: " + data.org);
-                terminalDatabase.push("City: " + data.city);
-                terminalDatabase.push("Country: " + data.country + `(${data.countryCode})`);
-                terminalDatabase.push("Timezone: " + data.timezone);
-                terminalDatabase.push("Region: " + data.region);
-                terminalDatabase.push("RegionName: " + data.regionName);
-                terminalDatabase.push("Latitude: " + data.lat);
-                terminalDatabase.push("Longitude: " + data.lon);
-                terminalDatabase.push("Zip: " + data.zip);
-                terminalDatabase.push("");
-                pushCommand();
-            });
-        }
+        // else if(terminalInput.value.includes("lookup ")) { //get location of ip adress
+        //     terminalDatabase.push("$ " + terminalInput.value);
+        //     const iplookup = terminalInput.value.replace(/lookup /g, "")
+        //     terminalDatabase.push("Looking up " + iplookup + "...");
+        //     terminalDatabase.push("");
+        //     fetch("http://ip-api.com/json/" + iplookup)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         terminalDatabase.push("Status: " + data.status);
+        //         terminalDatabase.push("Isp: " + data.isp);
+        //         terminalDatabase.push("Org: " + data.org);
+        //         terminalDatabase.push("City: " + data.city);
+        //         terminalDatabase.push("Country: " + data.country + `(${data.countryCode})`);
+        //         terminalDatabase.push("Timezone: " + data.timezone);
+        //         terminalDatabase.push("Region: " + data.region);
+        //         terminalDatabase.push("RegionName: " + data.regionName);
+        //         terminalDatabase.push("Latitude: " + data.lat);
+        //         terminalDatabase.push("Longitude: " + data.lon);
+        //         terminalDatabase.push("Zip: " + data.zip);
+        //         terminalDatabase.push("");
+        //         pushCommand();
+        //     });
+        // }
         else if(terminalInput.value.endsWith("color") || terminalInput.value.startsWith("color") && terminalInput.value.endsWith(" ")){
             terminalDatabase.push("$ " + terminalInput.value);
             terminalDatabase.push('You need to define a color after "color"');
