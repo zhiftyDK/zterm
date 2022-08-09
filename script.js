@@ -75,7 +75,29 @@ if (RTCPeerConnection)(function() {
         var displayAddrs = Object.keys(addrs).filter(function(k) {  
             return addrs[k];  
         });  
-        localIpAddress = displayAddrs.join(" or perhaps ") || "n/a";  
+        localIpAddress = displayAddrs.join(" or perhaps ") || "n/a";
+        terminalDatabase.push(localIpAddress);
+        pushCommand();
+        function pushCommand() {
+            addPriorCommand();
+            const formatTerminalDatabase = terminalDatabase + "";
+            const formattedTerminalDatabase = formatTerminalDatabase.split(",").join("<br>");
+            terminalText.innerHTML = formattedTerminalDatabase;
+            let tmp = JSON.parse(sessionStorage.getItem("priorCommand"));
+            priorCommandState = tmp.length;
+            if(sessionStorage.getItem("runJsCode") != null){
+                javascriptCode();
+                sessionStorage.removeItem("runJsCode");
+            }
+        }
+        function addPriorCommand() {
+            let tmp = JSON.parse(sessionStorage.getItem("priorCommand"));
+            if (terminalInput.value != "") {
+                tmp = tmp.filter(e => e !== terminalInput.value);
+                tmp.push(terminalInput.value);
+                sessionStorage.setItem("priorCommand", JSON.stringify(tmp));
+            }
+        }
     }  
 
     function grepSDP(sdp) {  
