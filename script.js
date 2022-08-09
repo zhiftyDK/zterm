@@ -254,12 +254,12 @@ terminalInput.addEventListener("keyup", function(event) {
             terminalInput.style.display = "none";
             pushCommand();
         }
-        else if(terminalInput.value.endsWith("lookup") || terminalInput.value.startsWith("lookup") && terminalInput.value.endsWith(" ")){
-            terminalDatabase.push("$ " + terminalInput.value);
-            terminalDatabase.push('You need to enter an IP adress after "lookup"');
-            terminalDatabase.push("");
-            pushCommand();
-        }
+        // else if(terminalInput.value.endsWith("lookup") || terminalInput.value.startsWith("lookup") && terminalInput.value.endsWith(" ")){
+        //     terminalDatabase.push("$ " + terminalInput.value);
+        //     terminalDatabase.push('You need to enter an IP adress after "lookup"');
+        //     terminalDatabase.push("");
+        //     pushCommand();
+        // }
         // else if(terminalInput.value.includes("lookup ")) { //get location of ip adress
         //     terminalDatabase.push("$ " + terminalInput.value);
         //     const iplookup = terminalInput.value.replace(/lookup /g, "")
